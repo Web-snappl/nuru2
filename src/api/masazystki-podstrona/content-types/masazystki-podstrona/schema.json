@@ -1,0 +1,44 @@
+{
+  "kind": "singleType",
+  "collectionName": "masazystki_podstronas",
+  "info": {
+    "singularName": "masazystki-podstrona",
+    "pluralName": "masazystki-podstronas",
+    "displayName": "MasazystkiPodstrona"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "HeroTytul": {
+      "type": "string"
+    },
+    "HeroOpis": {
+      "type": "string"
+    },
+    "OdkryjPodtytul": {
+      "type": "string"
+    },
+    "OdkryjTytul": {
+      "type": "string"
+    },
+    "OdkryjOpis": {
+      "type": "text"
+    },
+    "Odkryj": {
+      "type": "component",
+      "component": "masazystki-podstrona.odkryj",
+      "repeatable": true
+    },
+    "DlaczegoPodtytul": {
+      "type": "string"
+    },
+    "DlaczegoTytul": {
+      "type": "string"
+    },
+    "DlaczegoOpis": {
+      "type": "text"
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "collectionName": "components_salony_podstrona_salony_dlaczegos",
+  "info": {
+    "displayName": "SalonyDlaczego"
+  },
+  "options": {},
+  "attributes": {
+    "SalonyDlaczegoImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "SalonyDlaczegoText": {
+      "type": "string"
+    },
+    "SalonyDlaczegoDesc": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}

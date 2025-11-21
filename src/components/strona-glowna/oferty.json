@@ -1,0 +1,26 @@
+{
+  "collectionName": "components_strona_glowna_oferties",
+  "info": {
+    "displayName": "Oferty"
+  },
+  "options": {},
+  "attributes": {
+    "OfertaImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "OfertaPodtytul": {
+      "type": "string"
+    },
+    "OfertaTytul": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}

@@ -1,0 +1,43 @@
+{
+  "kind": "singleType",
+  "collectionName": "oferty_podstronas",
+  "info": {
+    "singularName": "oferty-podstrona",
+    "pluralName": "oferty-podstronas",
+    "displayName": "OfertyPodstrona"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "HeroTytul": {
+      "type": "string"
+    },
+    "HeroOpis": {
+      "type": "string"
+    },
+    "OfertyTytul": {
+      "type": "string"
+    },
+    "Oferta": {
+      "type": "component",
+      "component": "oferty-podstrona.oferty",
+      "repeatable": true
+    },
+    "OfertyPodtytul": {
+      "type": "string"
+    },
+    "OfertyOpis": {
+      "type": "string"
+    },
+    "OfertyDlaczegoTytul": {
+      "type": "string"
+    },
+    "OfertyDlaczego": {
+      "type": "component",
+      "component": "oferty-podstrona.oferty-dlaczego",
+      "repeatable": true
+    }
+  }
+}

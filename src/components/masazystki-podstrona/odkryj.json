@@ -1,0 +1,26 @@
+{
+  "collectionName": "components_masazystki_podstrona_odkryjs",
+  "info": {
+    "displayName": "Odkryj"
+  },
+  "options": {},
+  "attributes": {
+    "OdkryjImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "OdkryjText": {
+      "type": "string"
+    },
+    "OdkryjDesc": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}

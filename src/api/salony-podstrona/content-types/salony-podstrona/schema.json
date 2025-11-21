@@ -1,0 +1,43 @@
+{
+  "kind": "singleType",
+  "collectionName": "salony_podstronas",
+  "info": {
+    "singularName": "salony-podstrona",
+    "pluralName": "salony-podstronas",
+    "displayName": "SalonyPodstrona"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "HeroTytul": {
+      "type": "string"
+    },
+    "HeroOpis": {
+      "type": "string"
+    },
+    "SalonyTytul": {
+      "type": "string"
+    },
+    "Salon": {
+      "type": "component",
+      "component": "salony-podstrona.salony",
+      "repeatable": true
+    },
+    "SalonyPodtytul": {
+      "type": "string"
+    },
+    "SalonyOpis": {
+      "type": "string"
+    },
+    "SalonyDlaczegoTytul": {
+      "type": "string"
+    },
+    "SalonyDlaczego": {
+      "type": "component",
+      "component": "salony-podstrona.salony-dlaczego",
+      "repeatable": true
+    }
+  }
+}

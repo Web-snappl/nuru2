@@ -1,0 +1,92 @@
+{
+  "kind": "singleType",
+  "collectionName": "strona_glownas",
+  "info": {
+    "singularName": "strona-glowna",
+    "pluralName": "strona-glownas",
+    "displayName": "StronaGlowna"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "HeroTytul": {
+      "type": "string"
+    },
+    "HeroOpis": {
+      "type": "string"
+    },
+    "OgloszeniaTytul": {
+      "type": "string"
+    },
+    "Ogloszenie": {
+      "type": "component",
+      "component": "strona-glowna.ogloszenia",
+      "repeatable": true
+    },
+    "Kategoria": {
+      "type": "component",
+      "component": "strona-glowna.kategorie",
+      "repeatable": true
+    },
+    "SalonyTytul": {
+      "type": "string"
+    },
+    "SalonyOpis": {
+      "type": "string"
+    },
+    "SalonyLinkText": {
+      "type": "string"
+    },
+    "OfertyTytul": {
+      "type": "string"
+    },
+    "OfertyPodtytul": {
+      "type": "string"
+    },
+    "Oferta": {
+      "type": "component",
+      "component": "strona-glowna.oferty",
+      "repeatable": true
+    },
+    "WojewodztwaTytul": {
+      "type": "string"
+    },
+    "WojewodztwaOpis": {
+      "type": "string"
+    },
+    "Wojewodztwo": {
+      "type": "component",
+      "component": "strona-glowna.wojewodztwa",
+      "repeatable": true
+    },
+    "OPortaluTytul": {
+      "type": "string"
+    },
+    "OPortaluOpis": {
+      "type": "text"
+    },
+    "OPortaluImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "PartnerzyTytul": {
+      "type": "string"
+    },
+    "PartnerzyOpis": {
+      "type": "string"
+    },
+    "Partner": {
+      "type": "component",
+      "component": "strona-glowna.partnerzy",
+      "repeatable": true
+    }
+  }
+}

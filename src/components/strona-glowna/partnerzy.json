@@ -1,0 +1,20 @@
+{
+  "collectionName": "components_strona_glowna_partnerzies",
+  "info": {
+    "displayName": "Partnerzy"
+  },
+  "options": {},
+  "attributes": {
+    "PartnerLogo": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    }
+  },
+  "config": {}
+}

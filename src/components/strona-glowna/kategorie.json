@@ -1,0 +1,23 @@
+{
+  "collectionName": "components_strona_glowna_kategories",
+  "info": {
+    "displayName": "Kategorie"
+  },
+  "options": {},
+  "attributes": {
+    "KategoriaImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "KategoriaTytul": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}
