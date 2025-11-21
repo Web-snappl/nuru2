@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" width="800" height="1000">
+  <!-- Simplified map of Poland with regions -->
+  <g id="poland-map">
+    <!-- Border -->
+    <path d="M 150 50 L 650 50 L 700 150 L 680 300 L 650 500 L 600 700 L 550 850 L 400 950 L 250 900 L 150 750 L 120 500 L 100 250 Z" 
+          fill="#f5f5f5" stroke="#ecb742" stroke-width="2"/>
+    
+    <!-- Regions simplified -->
+    <path d="M 200 100 L 350 80 L 400 150 L 350 200 L 200 180 Z" 
+          fill="#fff" stroke="#ddd" stroke-width="1" class="region" id="pomorskie"/>
+    <path d="M 400 150 L 550 100 L 600 200 L 500 250 L 400 200 Z" 
+          fill="#fff" stroke="#ddd" stroke-width="1" class="region" id="warminsko-mazurskie"/>
+    <path d="M 150 200 L 300 180 L 350 250 L 300 350 L 150 320 Z" 
+          fill="#fff" stroke="#ddd" stroke-width="1" class="region" id="zachodniopomorskie"/>
+    <path d="M 300 250 L 450 220 L 500 320 L 400 400 L 300 350 Z" 
+          fill="#fff" stroke="#ddd" stroke-width="1" class="region" id="mazowieckie"/>
+    <path d="M 150 350 L 300 350 L 350 450 L 280 550 L 150 500 Z" 
+          fill="#fff" stroke="#ddd" stroke-width="1" class="region" id="lubuskie"/>
+    <path d="M 300 400 L 450 370 L 500 470 L 400 550 L 300 500 Z" 
+          fill="#fff" stroke="#ddd" stroke-width="1" class="region" id="lodzkie"/>
+    <path d="M 450 400 L 600 350 L 630 450 L 550 550 L 450 500 Z" 
+          fill="#fff" stroke="#ddd" stroke-width="1" class="region" id="lubelskie"/>
+    <path d="M 180 550 L 320 520 L 380 620 L 300 720 L 180 680 Z" 
+          fill="#fff" stroke="#ddd" stroke-width="1" class="region" id="dolnoslaskie"/>
+    <path d="M 320 570 L 480 540 L 520 640 L 420 740 L 320 700 Z" 
+          fill="#fff" stroke="#ddd" stroke-width="1" class="region" id="slaskie"/>
+    <path d="M 480 580 L 620 550 L 630 650 L 530 750 L 480 680 Z" 
+          fill="#fff" stroke="#ddd" stroke-width="1" class="region" id="podkarpackie"/>
+    <path d="M 250 720 L 380 690 L 420 790 L 340 870 L 250 830 Z" 
+          fill="#fff" stroke="#ddd" stroke-width="1" class="region" id="opolskie"/>
+    <path d="M 380 740 L 520 710 L 550 810 L 450 900 L 380 850 Z" 
+          fill="#fff" stroke="#ddd" stroke-width="1" class="region" id="malopolskie"/>
+  </g>
+</svg>
