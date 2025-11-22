@@ -1,6 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { GoogleMap, Marker, StandaloneSearchBox, useJsApiLoader } from "@react-google-maps/api";
 
+// Fix: Define libraries as const outside component to prevent reloads
+const GOOGLE_MAPS_LIBRARIES: ("places")[] = ["places"];
+
 // Props: adres jako string
 export default function MapaAdres({ address }: { address: string }) {
   const [selected, setSelected] = useState<{ lat: number; lng: number } | null>(null);
@@ -10,8 +13,8 @@ export default function MapaAdres({ address }: { address: string }) {
 
   const { isLoaded, loadError } = useJsApiLoader({
     id: "google-map-script",
-    googleMapsApiKey: (process.env.REACT_APP_GOOGLE_MAPS_API_KEY || "AIzaSyA8aqtLQbxqJ-DSCBvY7mO1Q_FE5J8gC7E") as string,
-    libraries: ["places"],
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || "AIzaSyA8aqtLQbxqJ-DSCBvY7mO1Q_FE5J8gC7E",
+    libraries: GOOGLE_MAPS_LIBRARIES,
   });
 
   // helper: promisified geocode with fallback (address, address + ", Polska", city-only)
