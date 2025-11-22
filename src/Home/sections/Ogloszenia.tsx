@@ -1,5 +1,6 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
 import mapaSvg from "../../images/mapa.svg";
 import OgloszenieMapSection from "./OgloszeniaMapSection";
 import OgloszenieZdjecia from "./OgloszeniaZdjecia";
@@ -133,18 +134,18 @@ const tattooOptions = ["tak", "nie"];
 
 export default function Ogloszenie() {
   const navigate = useNavigate();
+  const { user, loading } = useAuth();
   const [isPaid, setIsPaid] = useState(false);
 
   useEffect(() => {
-    const user = localStorage.getItem("authUser");
-    if (!user) {
+    if (!loading && !user) {
       navigate("/login");
     }
     const params = new URLSearchParams(window.location.search);
     if (params.get("sukces") === "true") {
       setIsPaid(true);
     }
-  }, [navigate]);
+  }, [user, loading, navigate]);
 
   const defaultSchedule: Schedule = useMemo(
     () => ({
@@ -334,7 +335,7 @@ export default function Ogloszenie() {
               GodzinaDo: `${d.to}:00.000`,
             })),
           Preferencje: form.preferences.map(pref => ({ Preferencja: pref })),
-          userEmail: localStorage.getItem("authUser"),
+          userEmail: user?.email,
           // DODATKOWE POLA
           Plec: form.plec,
           Wiek: form.wiek,
