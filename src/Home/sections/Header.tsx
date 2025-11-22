@@ -8,7 +8,6 @@ import HomeIcon from "../../images/Homeico.png";
 import MasazystkiIcon from "../../images/MasazystkiIco.png";
 import MasazysciIcon from "../../images/MasazysciIco.png";
 import DuetyIcon from "../../images/DuetyIco.png";
-import OfertyIcon from "../../images/OfertyIco.png";
 import SalonyIcon from "../../images/SalonyIco.png";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
@@ -29,14 +28,12 @@ const Header: React.FC = () => {
       <nav className="bg-white shadow-sm">
         <div className="container mx-auto flex items-center justify-between px-4 sm:px-6 lg:px-32 py-5">
           {/* Logo */}
-          <Link to ="/">
+          <Link to="/">
             <div className="flex items-center space-x-3">
               <div className="w-14 h-14 flex items-center justify-center">
                 <img src={Logo} alt="LOGO" className="max-h-full max-w-full" />
               </div>
-              <span className="text-2xl sm:text-3xl font-bold text-gray-800">
-                NURU.MS
-              </span>
+              <span className="text-2xl sm:text-3xl font-bold text-gray-800">NURU.MS</span>
             </div>
           </Link>
           {/* Hamburger button (mobile) */}
@@ -124,9 +121,7 @@ const Header: React.FC = () => {
       {/* Sub-navbar */}
       <div className="bg-[#faf2dd] shadow-sm">
         <div className="container mx-auto px-4 sm:px-6 lg:px-32 py-1">
-          <div
-            className="grid grid-cols-3 md:grid-cols-6 gap-x-2 gap-y-2 w-full"
-          >
+          <div className="grid grid-cols-3 md:grid-cols-6 gap-x-2 gap-y-2 w-full">
             {/* Home */}
             <Link to="/" className="flex items-center cursor-pointer hover:text-yellow-600 gap-2 py-2 px-2">
               <img src={HomeIcon} alt="HOME" className="w-7 h-7 object-contain" />
@@ -146,11 +141,6 @@ const Header: React.FC = () => {
             <Link to="/duety" className="flex items-center cursor-pointer hover:text-yellow-600 gap-2 py-2 px-2">
               <img src={DuetyIcon} alt="DUETY" className="w-7 h-7 object-contain" />
               <span className="text-base font-medium">Duety</span>
-            </Link>
-            {/* Oferty */}
-            <Link to="/oferty" className="flex items-center cursor-pointer hover:text-yellow-600 gap-2 py-2 px-2">
-              <img src={OfertyIcon} alt="OFERTY" className="w-7 h-7 object-contain" />
-              <span className="text-base font-medium">Oferty</span>
             </Link>
             {/* Salony */}
             <Link to="/salony" className="flex items-center cursor-pointer hover:text-yellow-600 gap-2 py-2 px-2">
