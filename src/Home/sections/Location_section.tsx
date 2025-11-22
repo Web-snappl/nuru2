@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import icon from "../../images/icon.png";
-import zdj1 from "../../images/zdj1.png";
+import zdj1 from "../../images/zdj2.png";
 import zdj2 from "../../images/zdj3.png";
 import zdj3 from "../../images/zdj4.png";
 import zdj4 from "../../images/zdj5.png";
