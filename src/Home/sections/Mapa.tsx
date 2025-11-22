@@ -2,6 +2,9 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { GoogleMap, Marker, StandaloneSearchBox, useJsApiLoader } from "@react-google-maps/api";
 
+// Fix: Define libraries as const outside component to prevent reloads
+const GOOGLE_MAPS_LIBRARIES: ("places")[] = ["places"];
+
 type LatLng = { lat: number; lng: number; };
 type MasazystkaOgłoszenie = { id: string; [key: string]: any; };
 
@@ -17,8 +20,8 @@ export default function Mapa({ userLocation, onLocationChange, masazystki = [] }
 
   const { isLoaded, loadError } = useJsApiLoader({
     id: "google-map-script",
-    googleMapsApiKey: (process.env.REACT_APP_GOOGLE_MAPS_API_KEY || "AIzaSyA8aqtLQbxqJ-DSCBvY7mO1Q_FE5J8gC7E") as string,
-    libraries: ["places"],
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || "AIzaSyA8aqtLQbxqJ-DSCBvY7mO1Q_FE5J8gC7E",
+    libraries: GOOGLE_MAPS_LIBRARIES,
   });
 
   const defaultCenter = useMemo<LatLng>(() => ({ lat: 52.1, lng: 19.4 }), []);
