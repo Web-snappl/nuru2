@@ -4,6 +4,8 @@ import { useAuth } from "../../contexts/AuthContext";
 import mapaSvg from "../../images/mapa.svg";
 import OgloszenieMapSection from "./OgloszeniaMapSection";
 import OgloszenieZdjecia from "./OgloszeniaZdjecia";
+import { supabase } from "../../lib/supabase";
+import { uploadOgloszenieImage } from "../../services/ogloszeniaService";
 
 // Payment Link Stripe
 const STRIPE_PAYMENT_LINK = "https://buy.stripe.com/8x27sK8al3tjdUlfOw1ck00";
@@ -285,92 +287,155 @@ export default function Ogloszenie() {
   const handleStripePay = () => {
     window.location.href = STRIPE_PAYMENT_LINK;
   };
-    const checkPhoneDuplicate = async (phone: string) => {
-    const res = await fetch(
-        `https://nuru.ms/api/ogloszenie-nurus?filters[OgloszeniaKontaktNumer][$eq]=${encodeURIComponent(phone)}`
-    );
-    const json = await res.json();
-    return Array.isArray(json.data) && json.data.length > 0;
-    };
+  const checkPhoneDuplicate = async (phone: string) => {
+    if (!phone) return false;
+    const { data, error } = await supabase
+      .from('ogloszenia')
+      .select('id')
+      .eq('telefon', phone)
+      .limit(1);
+    
+    if (error) {
+      console.error('Error checking phone duplicate:', error);
+      return false;
+    }
+    
+    return data && data.length > 0;
+  };
   const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  const isDuplicate = await checkPhoneDuplicate(form.phone);
-  if (isDuplicate) {
-    alert("Taki numer telefonu już istnieje w innym ogłoszeniu! Podaj inny numer.");
-    return;
-  }
+    e.preventDefault();
+    
+    if (!user) {
+      alert("Musisz być zalogowany, aby dodać ogłoszenie!");
+      return;
+    }
 
-  if (!isPaid) {
-    alert("Przed dodaniem ogłoszenia musisz zapłacić 50 zł przez Stripe!");
-    return;
-  }
+    const isDuplicate = await checkPhoneDuplicate(form.phone);
+    if (isDuplicate) {
+      alert("Taki numer telefonu już istnieje w innym ogłoszeniu! Podaj inny numer.");
+      return;
+    }
+
+    if (!isPaid) {
+      alert("Przed dodaniem ogłoszenia musisz zapłacić 50 zł przez Stripe!");
+      return;
+    }
+
     try {
-      const formData = new FormData();
-      formData.append(
-        "data",
-        JSON.stringify({
-          OgloszenieTyp: form.type,
-          OgloszenieKategoria: form.category,
-          OgloszenieTytul: form.title,
-          OgloszenieMiasto: form.city,
-          OgloszenieCenaZl: Number(form.price),
-          OgloszenieCenaZaH: form.unitHours,
-          OgloszenieKrotkiOpis: form.shortDesc,
-          OgloszeniePelenOpis: form.fullDesc,
-          OgloszenieRozmiarBiustu: form.bustSize,
-          OgloszenieRodzajBiustu: form.bustType,
-          OgloszenieKsztaltBiustu: form.bustShape,
-          OgloszenieAdres: form.address,
-          OgloszenieWojewodztwo: form.location,
-          OgloszeniaKontaktNumer: form.phone,
-          OgloszeniaKontaktWhatsApp: form.whatsapp,
-          OgloszeniaKontaktTelegram: form.telegram,
-          OgloszeniaEmail: form.email,
-          OgloszeniaKontaktStronaWWW: form.www,
-          OgloszenieGodziny: Object.entries(schedule)
-            .filter(([_, d]) => d.enabled)
-            .map(([key, d]) => ({
-              DzienTygodnia: key,
-              GodzinaOd: `${d.from}:00.000`,
-              GodzinaDo: `${d.to}:00.000`,
-            })),
-          Preferencje: form.preferences.map(pref => ({ Preferencja: pref })),
-          userEmail: user?.email,
-          // DODATKOWE POLA
-          Plec: form.plec,
-          Wiek: form.wiek,
-          Biust: form.biust,
-          Wyjazdy: form.wyjazdy,
-          Narodowosc: form.narodowosc,
-          Orientacja: form.orientacja,
-          Waga: form.waga,
-          Wzrost: form.wzrost,
-          KolorWlosow: form.kolorWlosow,
-          KolorOczu: form.kolorOczu,
-          Tatuaze: form.tatuaze,
-          cennikUMnie: form.cennikUMnie,
-          cennikWyjazd: form.cennikWyjazd,
-        })
-      );
-      form.images
-        .filter((f): f is File => !!f)
-        .forEach((file) => {
-          formData.append("files.Zdjecia", file, file.name);
-        });
-      const res = await fetch(
-        "https://nuru.ms/api/ogloszenie-nurus",
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({ message: "no json" }));
-        console.error("Błąd Strapi:", err);
+      // 1. Utwórz główne ogłoszenie
+      const { data: ogloszenie, error: ogloszenieError } = await supabase
+        .from('ogloszenia')
+        .insert([{
+          user_id: user.id,
+          typ: form.type,
+          kategoria: form.category,
+          tytul: form.title,
+          miasto: form.city,
+          adres: form.address,
+          wojewodztwo: form.location,
+          krotki_opis: form.shortDesc,
+          pelny_opis: form.fullDesc,
+          plec: form.plec,
+          wiek: form.wiek,
+          biust: form.biust,
+          rozmiar_biustu: form.bustSize,
+          rodzaj_biustu: form.bustType,
+          ksztalt_biustu: form.bustShape,
+          wyjazdy: form.wyjazdy,
+          narodowosc: form.narodowosc,
+          orientacja: form.orientacja,
+          waga: form.waga,
+          wzrost: form.wzrost,
+          kolor_wlosow: form.kolorWlosow,
+          kolor_oczu: form.kolorOczu,
+          tatuaze: form.tatuaze,
+          cena_umnie: parseFloat(form.cennikUMnie.cena) || 0,
+          cena_umnie_15min: parseFloat(form.cennikUMnie.cena15min) || 0,
+          cena_umnie_30min: parseFloat(form.cennikUMnie.cena30min) || 0,
+          cena_umnie_noc: parseFloat(form.cennikUMnie.cenaNoc) || 0,
+          cena_wyjazd: parseFloat(form.cennikWyjazd.cena) || 0,
+          cena_wyjazd_15min: parseFloat(form.cennikWyjazd.cena15min) || 0,
+          cena_wyjazd_30min: parseFloat(form.cennikWyjazd.cena30min) || 0,
+          cena_wyjazd_noc: parseFloat(form.cennikWyjazd.cenaNoc) || 0,
+          telefon: form.phone,
+          whatsapp: form.whatsapp,
+          telegram: form.telegram,
+          email: form.email,
+          www: form.www,
+          is_paid: true,
+          is_active: true,
+          is_confirmed: false, // Admin musi potwierdzić
+        }])
+        .select()
+        .single();
+
+      if (ogloszenieError) {
+        console.error('Error creating ogloszenie:', ogloszenieError);
         alert("Nie udało się dodać ogłoszenia.");
         return;
       }
-      alert("Ogłoszenie zostało dodane do bazy!");
+
+      // 2. Dodaj godziny pracy
+      const godzinyData = Object.entries(schedule)
+        .filter(([_, d]) => d.enabled)
+        .map(([key, d]) => ({
+          ogloszenie_id: ogloszenie.id,
+          dzien_tygodnia: key,
+          godzina_od: d.from,
+          godzina_do: d.to,
+        }));
+
+      if (godzinyData.length > 0) {
+        const { error: godzinyError } = await supabase
+          .from('ogloszenia_godziny')
+          .insert(godzinyData);
+
+        if (godzinyError) {
+          console.error('Error adding godziny:', godzinyError);
+        }
+      }
+
+      // 3. Dodaj preferencje
+      if (form.preferences.length > 0) {
+        const preferencjeData = form.preferences.map(pref => ({
+          ogloszenie_id: ogloszenie.id,
+          preferencja: pref,
+        }));
+
+        const { error: preferencjeError } = await supabase
+          .from('ogloszenia_preferencje')
+          .insert(preferencjeData);
+
+        if (preferencjeError) {
+          console.error('Error adding preferencje:', preferencjeError);
+        }
+      }
+
+      // 4. Upload zdjęć
+      const imageFiles = form.images.filter((f): f is File => !!f);
+      if (imageFiles.length > 0) {
+        for (let i = 0; i < imageFiles.length; i++) {
+          const file = imageFiles[i];
+          const storagePath = await uploadOgloszenieImage(file, user.id, i);
+          
+          if (storagePath) {
+            const { error: imageError } = await supabase
+              .from('ogloszenia_images')
+              .insert([{
+                ogloszenie_id: ogloszenie.id,
+                storage_path: storagePath,
+                display_order: i,
+                is_primary: i === 0,
+              }]);
+
+            if (imageError) {
+              console.error('Error adding image record:', imageError);
+            }
+          }
+        }
+      }
+
+      alert("Ogłoszenie zostało dodane i czeka na zatwierdzenie przez administratora!");
       navigate("/");
     } catch (error) {
       console.error("Błąd:", error);

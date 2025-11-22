@@ -132,11 +132,7 @@ export async function uploadOgloszenieImage(
     return null;
   }
 
-  const { data } = supabase.storage
-    .from('ogloszenia-images')
-    .getPublicUrl(fileName);
-
-  return data.publicUrl;
+  return fileName; // Zwracamy ścieżkę, nie publicUrl
 }
 
 export async function createOgloszenie(ogloszenieData: any) {
