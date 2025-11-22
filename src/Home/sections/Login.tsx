@@ -1,19 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
-const USERS_KEY = "usersDbJson";
+import { useAuth } from "../../contexts/AuthContext";
 
 export default function Logowanie() {
   const navigate = useNavigate();
+  const { user, signIn, signOut } = useAuth();
   const [email, setEmail] = useState("");
   const [haslo, setHaslo] = useState("");
   const [error, setError] = useState("");
-  const [isLogged, setIsLogged] = useState(false);
+  const [loading, setLoading] = useState(false);
 
+  // Redirect if already logged in
   useEffect(() => {
-    const user = localStorage.getItem("authUser");
-    setIsLogged(!!user);
-  }, []);
+    if (user) {
+      navigate("/");
+    }
+  }, [user, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,43 +26,34 @@ export default function Logowanie() {
       return;
     }
 
-    try {
-      const res = await fetch(
-        'https://nuru.ms/api/user-nurus?_action=login',
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-          data: {
-            email,
-            password: haslo,
-          },
-        }),// strapi odczyta ctx.request.body.email
-        }
-      );
-      const data = await res.json();
+    setLoading(true);
 
-      if (!data?.data || data.data.length === 0) {
-        setError("Nieprawidłowy e-mail lub hasło.");
+    try {
+      const { error: signInError } = await signIn(email, haslo);
+
+      if (signInError) {
+        if (signInError.message.includes("Invalid login credentials")) {
+          setError("Nieprawidłowy e-mail lub hasło.");
+        } else if (signInError.message.includes("Email not confirmed")) {
+          setError("Potwierdź swój adres e-mail przed zalogowaniem.");
+        } else {
+          setError(signInError.message);
+        }
         return;
       }
 
-      // Logowanie udane
-      localStorage.setItem("authUser", email);
-      localStorage.setItem("authToken", "demo-token"); // tymczasowy token
-      setIsLogged(true);
+      // Success - will redirect via useEffect
       navigate("/");
-      window.location.reload();
     } catch (err) {
-      console.error(err);
+      console.error("Login error:", err);
       setError("Błąd logowania. Spróbuj ponownie.");
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("authUser");
-    localStorage.removeItem("authToken");
-    setIsLogged(false);
+  const handleLogout = async () => {
+    await signOut();
     setEmail("");
     setHaslo("");
   };
@@ -68,7 +61,7 @@ export default function Logowanie() {
   return (
     <section className="w-full min-h-[70vh] bg-white flex items-center justify-center py-12">
       <div className="w-full max-w-md bg-white rounded-xl border border-gray-200 shadow p-6">
-        {isLogged ? (
+        {user ? (
           <div className="flex flex-col items-center justify-center">
             <div className="text-lg text-gray-700 mb-4">
               Jesteś już zalogowany!
@@ -125,9 +118,10 @@ export default function Logowanie() {
               {error && <div className="text-sm text-red-600">{error}</div>}
               <button
                 type="submit"
-                className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-medium py-2.5 rounded transition-colors"
+                disabled={loading}
+                className="w-full bg-yellow-500 hover:bg-yellow-600 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-medium py-2.5 rounded transition-colors"
               >
-                Zaloguj
+                {loading ? "Logowanie..." : "Zaloguj"}
               </button>
             </form>
             {/* Link do rejestracji */}

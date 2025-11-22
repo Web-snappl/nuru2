@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Logo from "../../images/Group1.png";
 import ObserwowaneIcon from "../../images/obserwowane.png";
 import RejestracjaIcon from "../../images/rejestracja.png";
@@ -11,23 +11,16 @@ import DuetyIcon from "../../images/DuetyIco.png";
 import OfertyIcon from "../../images/OfertyIco.png";
 import SalonyIcon from "../../images/SalonyIco.png";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
 
 const Header: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [userEmail, setUserEmail] = useState<string | null>(null);
+  const { user, signOut } = useAuth();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const user = localStorage.getItem("authUser");
-    setUserEmail(user);
-  }, []);
-
-  const handleLogout = () => {
-    localStorage.removeItem("authUser");
-    localStorage.removeItem("authToken");
-    setUserEmail(null);
-    navigate("/"); // po wylogowaniu na stronę główną
-    window.location.reload(); // odśwież, jeśli chcesz ukryć dane bez reloadu możesz dodać inne podejście
+  const handleLogout = async () => {
+    await signOut();
+    navigate("/");
   };
 
   return (
@@ -71,11 +64,11 @@ const Header: React.FC = () => {
             <div className="hidden lg:block w-px h-14 bg-gray-300" />
 
             {/* Opcje zależne od zalogowania */}
-            {userEmail ? (
+            {user ? (
               <>
                 {/* Witaj + Wyloguj */}
                 <div className="flex flex-col items-center py-2 lg:py-0 text-yellow-700 font-semibold">
-                  <span className="text-m">Witaj, {userEmail}</span>
+                  <span className="text-m">Witaj, {user.email}</span>
                 </div>
                 {/* Separator */}
                 <div className="hidden lg:block w-px h-14 bg-gray-300" />
