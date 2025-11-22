@@ -5,9 +5,10 @@ import Header2 from "./sections/Header2";
 import MasseusesTeam from "./sections/Workers";
 import MassageInfoBlock from "./sections/MassageInfoBlock";
 import MassageServiceSection from "./sections/MassageServiceSection";
+import { fetchOgloszenia } from "../../services/ogloszeniaService";
 
 function MasazystkiSubpage() {
-  const [ads, setAds] = useState([]);
+  const [ads, setAds] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const location = useLocation();
 
@@ -26,15 +27,13 @@ function MasazystkiSubpage() {
   useEffect(() => {
     const fetchAds = async () => {
       try {
-        // Budujemy endpoint dynamicznie
-        let url = `https://nuru.ms/api/ogloszenie-nurus?filters[OgloszenieTyp][$eq]=Prywatne&filters[OgloszenieKategoria][$eq]=${encodeURIComponent(category)}&filters[isConfirmed][$eq]=true&populate=*`;
-        if (region) {
-          url += `&filters[OgloszenieWojewodztwo][$eq]=${encodeURIComponent(region)}`;
-        }
-        const res = await fetch(url);
-        const json = await res.json();
-        setAds(json.data || []);
-        console.log("Fetched ads:", json);
+        const data = await fetchOgloszenia({
+          kategoria: category,
+          wojewodztwo: region,
+          typ: "Prywatne"
+        });
+        setAds(data);
+        console.log("Fetched ads:", data);
       } catch (err) {
         console.error("Błąd podczas pobierania ogłoszeń:", err);
       } finally {
@@ -43,7 +42,7 @@ function MasazystkiSubpage() {
     };
 
     fetchAds();
-  }, [category, location.pathname, region]); // reaguj na zmianę regionu
+  }, [category, location.pathname, region]);
 
   if (loading) {
     return <div className="p-10 text-center">Ładowanie ogłoszeń...</div>;

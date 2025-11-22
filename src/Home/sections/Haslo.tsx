@@ -1,13 +1,33 @@
 import React, { useState } from "react";
+import { useAuth } from "../../contexts/AuthContext";
 
 export default function HasloReset() {
+  const { resetPassword } = useAuth();
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSent(true);
-    // Tu normalnie wysłałbyś żądanie do backendu.
+    setError("");
+    setLoading(true);
+
+    try {
+      const { error: resetError } = await resetPassword(email);
+
+      if (resetError) {
+        setError("Błąd podczas resetowania hasła. Spróbuj ponownie.");
+        return;
+      }
+
+      setSent(true);
+    } catch (err) {
+      console.error("Password reset error:", err);
+      setError("Błąd podczas resetowania hasła. Spróbuj ponownie.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -37,11 +57,13 @@ export default function HasloReset() {
                 autoComplete="email"
               />
             </div>
+            {error && <div className="text-sm text-red-600">{error}</div>}
             <button
               type="submit"
-              className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-medium py-2.5 rounded transition-colors"
+              disabled={loading}
+              className="w-full bg-yellow-500 hover:bg-yellow-600 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-medium py-2.5 rounded transition-colors"
             >
-              Wyślij link do resetowania
+              {loading ? "Wysyłanie..." : "Wyślij link do resetowania"}
             </button>
           </form>
         )}

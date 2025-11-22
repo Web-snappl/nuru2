@@ -1,15 +1,25 @@
-import React, { useState } from "react";
-import emailjs from "emailjs-com";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
 
 function validateEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
 export default function Register() {
+  const navigate = useNavigate();
+  const { user, signUp } = useAuth();
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, [user, navigate]);
 
   const setValue = (key: keyof typeof form, value: string) =>
     setForm(f => ({ ...f, [key]: value }));
@@ -29,61 +39,31 @@ export default function Register() {
       return;
     }
 
+    if (form.password.length < 6) {
+      setError("Hasło musi mieć minimum 6 znaków.");
+      return;
+    }
+
     try {
       setLoading(true);
 
-      // 1️⃣ Sprawdzenie, czy email już istnieje
-      const checkRes = await fetch(
-        `https://nuru.ms/api/user-nurus?filters[email][$eq]=${encodeURIComponent(form.email)}`
-      );
-      const checkData = await checkRes.json();
+      const { error: signUpError } = await signUp(form.email, form.password);
 
-      if (checkData?.data?.length > 0) {
-        setError("Ten adres e-mail jest już zarejestrowany.");
-        setLoading(false);
+      if (signUpError) {
+        if (signUpError.message.includes("User already registered")) {
+          setError("Ten adres e-mail jest już zarejestrowany.");
+        } else if (signUpError.message.includes("Password should be at least")) {
+          setError("Hasło musi mieć minimum 6 znaków.");
+        } else {
+          setError(signUpError.message);
+        }
         return;
       }
 
-      // 2️⃣ Tworzenie użytkownika
-      const res = await fetch(
-        "https://nuru.ms/api/user-nurus?_action=register",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            data: { email: form.email, password: form.password },
-          }),
-        }
+      setSuccess(
+        "Konto utworzone! Sprawdź swój e-mail, aby potwierdzić konto. (Sprawdź także folder SPAM)"
       );
-
-      if (res.ok) {
-        const userEmail = form.email;
-        setSuccess(`Konto utworzone: ${form.email}`);
-        setForm({ email: "", password: "" });
-
-        // 3️⃣ Wysyłka maila aktywacyjnego przez EmailJS
-        try{
-            await emailjs.send(
-            "service_62ocdty", // Twój Service ID z EmailJS
-            "template_l6khqop", // Twój Template ID z EmailJS
-            {
-                to_email: form.email,
-                activation_link: `https://nuru.ms/`
-            },
-            "5HuY1pzYuMMtjq1gC" // Twój Public Key z EmailJS
-            );
-            setSuccess(`Konto utworzone: ${userEmail}. Mail aktywacyjny wysłany!`);
-            setForm({ email: "", password: "" });
-            
-            }catch(err)  {
-                console.error("EmailJS error:", err);
-                setSuccess(`Konto utworzone: ${userEmail}`);
-                setError("Konto utworzone, ale nie udało się wysłać maila aktywacyjnego.");
-            }
-        }else {
-            const data = await res.json().catch(() => null);
-            setError(data?.error?.message || `Błąd ${res.status}: ${res.statusText}`);
-      }
+      setForm({ email: "", password: "" });
     } catch (err) {
       console.error(err);
       setError("Wystąpił błąd. Spróbuj ponownie.");
