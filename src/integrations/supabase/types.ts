@@ -14,7 +14,240 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      ogloszenia: {
+        Row: {
+          adres: string | null
+          biust: string | null
+          cena_umnie: number | null
+          cena_umnie_15min: number | null
+          cena_umnie_30min: number | null
+          cena_umnie_noc: number | null
+          cena_wyjazd: number | null
+          cena_wyjazd_15min: number | null
+          cena_wyjazd_30min: number | null
+          cena_wyjazd_noc: number | null
+          created_at: string | null
+          email: string | null
+          id: string
+          is_active: boolean | null
+          is_confirmed: boolean | null
+          is_paid: boolean | null
+          kategoria: string
+          kolor_oczu: string | null
+          kolor_wlosow: string | null
+          krotki_opis: string | null
+          ksztalt_biustu: string | null
+          miasto: string
+          narodowosc: string | null
+          orientacja: string | null
+          pelny_opis: string | null
+          plec: string | null
+          rodzaj_biustu: string | null
+          rozmiar_biustu: string | null
+          tatuaze: string | null
+          telefon: string | null
+          telegram: string | null
+          typ: string
+          tytul: string
+          updated_at: string | null
+          user_id: string
+          waga: string | null
+          whatsapp: string | null
+          wiek: string | null
+          wojewodztwo: string | null
+          www: string | null
+          wyjazdy: string | null
+          wzrost: string | null
+        }
+        Insert: {
+          adres?: string | null
+          biust?: string | null
+          cena_umnie?: number | null
+          cena_umnie_15min?: number | null
+          cena_umnie_30min?: number | null
+          cena_umnie_noc?: number | null
+          cena_wyjazd?: number | null
+          cena_wyjazd_15min?: number | null
+          cena_wyjazd_30min?: number | null
+          cena_wyjazd_noc?: number | null
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_confirmed?: boolean | null
+          is_paid?: boolean | null
+          kategoria: string
+          kolor_oczu?: string | null
+          kolor_wlosow?: string | null
+          krotki_opis?: string | null
+          ksztalt_biustu?: string | null
+          miasto: string
+          narodowosc?: string | null
+          orientacja?: string | null
+          pelny_opis?: string | null
+          plec?: string | null
+          rodzaj_biustu?: string | null
+          rozmiar_biustu?: string | null
+          tatuaze?: string | null
+          telefon?: string | null
+          telegram?: string | null
+          typ: string
+          tytul: string
+          updated_at?: string | null
+          user_id: string
+          waga?: string | null
+          whatsapp?: string | null
+          wiek?: string | null
+          wojewodztwo?: string | null
+          www?: string | null
+          wyjazdy?: string | null
+          wzrost?: string | null
+        }
+        Update: {
+          adres?: string | null
+          biust?: string | null
+          cena_umnie?: number | null
+          cena_umnie_15min?: number | null
+          cena_umnie_30min?: number | null
+          cena_umnie_noc?: number | null
+          cena_wyjazd?: number | null
+          cena_wyjazd_15min?: number | null
+          cena_wyjazd_30min?: number | null
+          cena_wyjazd_noc?: number | null
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_confirmed?: boolean | null
+          is_paid?: boolean | null
+          kategoria?: string
+          kolor_oczu?: string | null
+          kolor_wlosow?: string | null
+          krotki_opis?: string | null
+          ksztalt_biustu?: string | null
+          miasto?: string
+          narodowosc?: string | null
+          orientacja?: string | null
+          pelny_opis?: string | null
+          plec?: string | null
+          rodzaj_biustu?: string | null
+          rozmiar_biustu?: string | null
+          tatuaze?: string | null
+          telefon?: string | null
+          telegram?: string | null
+          typ?: string
+          tytul?: string
+          updated_at?: string | null
+          user_id?: string
+          waga?: string | null
+          whatsapp?: string | null
+          wiek?: string | null
+          wojewodztwo?: string | null
+          www?: string | null
+          wyjazdy?: string | null
+          wzrost?: string | null
+        }
+        Relationships: []
+      }
+      ogloszenia_godziny: {
+        Row: {
+          created_at: string | null
+          dzien_tygodnia: string
+          godzina_do: string
+          godzina_od: string
+          id: string
+          ogloszenie_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          dzien_tygodnia: string
+          godzina_do: string
+          godzina_od: string
+          id?: string
+          ogloszenie_id: string
+        }
+        Update: {
+          created_at?: string | null
+          dzien_tygodnia?: string
+          godzina_do?: string
+          godzina_od?: string
+          id?: string
+          ogloszenie_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ogloszenia_godziny_ogloszenie_id_fkey"
+            columns: ["ogloszenie_id"]
+            isOneToOne: false
+            referencedRelation: "ogloszenia"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ogloszenia_images: {
+        Row: {
+          created_at: string | null
+          display_order: number | null
+          id: string
+          is_primary: boolean | null
+          ogloszenie_id: string
+          storage_path: string
+        }
+        Insert: {
+          created_at?: string | null
+          display_order?: number | null
+          id?: string
+          is_primary?: boolean | null
+          ogloszenie_id: string
+          storage_path: string
+        }
+        Update: {
+          created_at?: string | null
+          display_order?: number | null
+          id?: string
+          is_primary?: boolean | null
+          ogloszenie_id?: string
+          storage_path?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ogloszenia_images_ogloszenie_id_fkey"
+            columns: ["ogloszenie_id"]
+            isOneToOne: false
+            referencedRelation: "ogloszenia"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ogloszenia_preferencje: {
+        Row: {
+          created_at: string | null
+          id: string
+          ogloszenie_id: string
+          preferencja: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          ogloszenie_id: string
+          preferencja: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          ogloszenie_id?: string
+          preferencja?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ogloszenia_preferencje_ogloszenie_id_fkey"
+            columns: ["ogloszenie_id"]
+            isOneToOne: false
+            referencedRelation: "ogloszenia"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

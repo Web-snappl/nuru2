@@ -2,15 +2,17 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import icon from "../../images/icon.png";
 import zdjFallback from "../../images/zdj1.png";
+import { fetchOgloszenia } from "../../services/ogloszeniaService";
+import { supabase } from "../../lib/supabase";
 
 const OFFER_CARD_WIDTH = 240;
 
 type Offer = {
-  id: number | string;
+  id: string;
   label: string;
   type: string;
   img: string;
-  rawAd: any; // flattened ad: { id, ...attributes }
+  rawAd: any;
 };
 
 export default function LatestOffersStrip({ limit = 4 }: { limit?: number }) {
@@ -19,57 +21,41 @@ export default function LatestOffersStrip({ limit = 4 }: { limit?: number }) {
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  const STRAPI_BASE = "https://admin.nuru.ms";
-  // populate=* aby dostać wszystkie relacje (Zdjecia, cennikUMnie, cennikWyjazd, OgloszenieGodziny, Preferencje itd.)
-  const API_PATH = `/api/ogloszenie-nurus?sort=createdAt:desc&pagination[limit]=${limit}&filters[isConfirmed][$eq]=true&populate=*`;
-
   useEffect(() => {
     let mounted = true;
     const fetchOffers = async () => {
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch(`${STRAPI_BASE}${API_PATH}`);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const json = await res.json();
-
-        const mapped: Offer[] = (json.data || []).map((item: any) => {
-          const attrs = item.attributes || item;
-          const title =
-            attrs.OgloszenieTytul ||
-            attrs.title ||
-            attrs.name ||
-            "Ogłoszenie";
-          const label = attrs.OgloszenieMiasto || attrs.city || "Miasto";
-
-          // zdjęcie — pierwsze Zdjecia.data[0].attributes.url lub fallback
-          let img = zdjFallback;
-          try {
-            const imgs = attrs.Zdjecia || attrs.zdjecia || attrs.images;
-            if (imgs?.data && Array.isArray(imgs.data) && imgs.data[0]) {
-              const urlPath =
-                imgs.data[0].attributes?.formats?.thumbnail?.url ||
-                imgs.data[0].attributes?.url;
-              if (urlPath) img = urlPath.startsWith("http") ? urlPath : STRAPI_BASE + urlPath;
-            } else if (Array.isArray(imgs) && imgs[0]) {
-              const urlPath = imgs[0].url || imgs[0].attributes?.url;
-              if (urlPath) img = urlPath.startsWith("http") ? urlPath : STRAPI_BASE + urlPath;
+        const data = await fetchOgloszenia();
+        
+        // Mapuj do formatu komponentu
+        const mapped: Offer[] = await Promise.all(
+          data.slice(0, limit).map(async (item: any) => {
+            let img = zdjFallback;
+            
+            // Pobierz pierwsze zdjęcie
+            if (item.ogloszenia_images && item.ogloszenia_images.length > 0) {
+              const firstImage = item.ogloszenia_images
+                .sort((a: any, b: any) => a.display_order - b.display_order)[0];
+              
+              if (firstImage?.storage_path) {
+                const { data: urlData } = supabase.storage
+                  .from('ogloszenia-images')
+                  .getPublicUrl(firstImage.storage_path);
+                img = urlData.publicUrl;
+              }
             }
-          } catch (e) {
-            img = zdjFallback;
-          }
 
-          // SPŁASZCZENIE: przygotuj obiekt adFlatten z id + wszystkie pola attributes na top-level
-          const adFlatten = { id: item.id, ...(attrs || {}) };
-
-          return {
-            id: item.id,
-            label,
-            type: title,
-            img,
-            rawAd: adFlatten,
-          } as Offer;
-        });
+            return {
+              id: item.id,
+              label: item.miasto || "Miasto",
+              type: item.tytul || "Ogłoszenie",
+              img,
+              rawAd: item,
+            };
+          })
+        );
 
         if (mounted) setOffers(mapped);
       } catch (err: any) {
@@ -87,7 +73,6 @@ export default function LatestOffersStrip({ limit = 4 }: { limit?: number }) {
   }, [limit]);
 
   const handleOfferClick = (offer: Offer) => {
-    // Przekazujemy spłaszczony obiekt — info2 dostanie pola typu OgloszenieGodziny, cennikUMnie itd.
     navigate("/masazystki/info2", { state: { ad: offer.rawAd } });
   };
 
