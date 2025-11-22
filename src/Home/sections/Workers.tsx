@@ -6,7 +6,7 @@ import zdj3 from "../../images/duety.png";
 
 const cards = [
   { label: "Masażystki", to: "/masazystki", img: zdj1 },
-  { label: "Masażyści", to: "/masazysci", img: zdj2 },
+  { label: "Masażyści", to: "/masazysci", img: masazysci },
   { label: "Duety", to: "/duety", img: zdj3 },
 ];
 
