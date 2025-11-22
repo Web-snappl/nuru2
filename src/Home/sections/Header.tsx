@@ -109,7 +109,7 @@ const Header: React.FC = () => {
 
             {/* Button */}
             <Link
-              to="/Ogloszenia"
+              to="/ogloszenia"
               className="flex flex-col items-center py-2 lg:py-0 cursor-pointer hover:text-yellow-600"
             >
               <button className="flex items-center space-x-2 bg-yellow-500 text-white px-4 py-2 rounded-md shadow hover:bg-yellow-600 transition-colors">
