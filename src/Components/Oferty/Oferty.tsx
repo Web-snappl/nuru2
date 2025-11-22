@@ -4,6 +4,9 @@ import PinIcon from "../../images/pin.png";
 import HandIcon from "../../images/hand.png";
 import MarkerIcon from "../../images/marker.png";
 import OfferImg from "../../images/offer.png"; // <-- przykładowy obrazek oferty
+import Ikona1 from "../../images/ikona1.png";
+import Ikona2 from "../../images/ikona2.png";
+import Ikona3 from "../../images/ikona3.png";
 import Mapa from "../../Home/sections/Mapa";
 
 const markers = [
@@ -194,21 +197,21 @@ export default function OffersListPage() {
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-4xl w-full">
             <div className="flex flex-col items-center text-center">
-            <img src={require("../../images/ikona1.png")} alt="Łatwe wyszukiwanie" className="mb-4 w-14 h-14" />
+            <img src={Ikona1} alt="Łatwe wyszukiwanie" className="mb-4 w-14 h-14" />
             <div className="font-semibold text-lg mb-2">Łatwe wyszukiwanie</div>
             <div className="text-gray-700 text-base">
                 Intuicyjna wyszukiwarka i filtry pozwolą Ci szybko znaleźć idealny salon lub masażystę.
             </div>
             </div>
             <div className="flex flex-col items-center text-center">
-            <img src={require("../../images/ikona2.png")} alt="Zweryfikowane opinie" className="mb-4 w-14 h-14" />
+            <img src={Ikona2} alt="Zweryfikowane opinie" className="mb-4 w-14 h-14" />
             <div className="font-semibold text-lg mb-2">Zweryfikowane opinie</div>
             <div className="text-gray-700 text-base">
                 Zyskujesz pewność wyboru dzięki recenzjom i ocenom wystawianym przez użytkowników.
             </div>
             </div>
             <div className="flex flex-col items-center text-center">
-            <img src={require("../../images/ikona3.png")} alt="Aktualne ogłoszenia" className="mb-4 w-14 h-14" />
+            <img src={Ikona3} alt="Aktualne ogłoszenia" className="mb-4 w-14 h-14" />
             <div className="font-semibold text-lg mb-2">Aktualne ogłoszenia</div>
             <div className="text-gray-700 text-base">
                 Codziennie dodawane nowe oferty sprawiają, że zawsze masz dostęp do świeżych propozycji.
