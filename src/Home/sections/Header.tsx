@@ -147,11 +147,6 @@ const Header: React.FC = () => {
               <img src={DuetyIcon} alt="DUETY" className="w-7 h-7 object-contain" />
               <span className="text-base font-medium">Duety</span>
             </Link>
-            {/* Oferty */}
-            <Link to="/" className="flex items-center cursor-pointer hover:text-yellow-600 gap-2 py-2 px-2">
-              <img src= alt="" className="w-7 h-7 object-contain" />
-              <span className="text-base font-medium"></span>
-            </Link>
             {/* Salony */}
             <Link to="/salony" className="flex items-center cursor-pointer hover:text-yellow-600 gap-2 py-2 px-2">
               <img src={SalonyIcon} alt="SALONY" className="w-7 h-7 object-contain" />
